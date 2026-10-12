@@ -69,7 +69,8 @@ class MainActivity : ComponentActivity() {
                     .build().also {
                         it.setAnalyzer(cameraExecutor, FaceDistanceAnalyzer(
                             onTooCloseTriggered = { runOnUiThread { alertUser() } },
-                            onSafeDistance = { runOnUiThread { safeUser() } }
+                            onSafeDistance = { runOnUiThread { safeUser() } },
+                            onFaceLost = { runOnUiThread { lostUser() } } // تفعيل الحالة الجديدة
                         ))
                     }
                 cameraProvider.unbindAll()
@@ -83,6 +84,20 @@ class MainActivity : ComponentActivity() {
     private fun alertUser() {
         statusText.text = "⚠️ تحذير: الهاتف قريب جداً!"
         statusText.setBackgroundColor(Color.RED)
+        triggerVib()
+    }
+
+    private fun safeUser() {
+        statusText.text = "✅ المسافة آمنة"
+        statusText.setBackgroundColor(Color.rgb(0, 150, 0))
+    }
+
+    private fun lostUser() {
+        statusText.text = "🔍 لم يتم رصد وجه\n(هل الهاتف ملاصق لوجهك أو الإضاءة معدومة؟)"
+        statusText.setBackgroundColor(Color.DKGRAY)
+    }
+
+    private fun triggerVib() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val vm = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -93,11 +108,6 @@ class MainActivity : ComponentActivity() {
                 v.vibrate(120)
             }
         } catch (_: Exception) {}
-    }
-
-    private fun safeUser() {
-        statusText.text = "✅ المسافة آمنة"
-        statusText.setBackgroundColor(Color.rgb(0, 150, 0))
     }
 
     private fun allPermissionsGranted() = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
