@@ -9,7 +9,8 @@ import com.google.mlkit.vision.face.FaceDetectorOptions
 
 class FaceDistanceAnalyzer(
     private val onTooCloseTriggered: () -> Unit,
-    private val onSafeDistance: () -> Unit
+    private val onSafeDistance: () -> Unit,
+    private val onFaceLost: () -> Unit // بروتوكول جديد عند فقدان الوجه
 ) : ImageAnalysis.Analyzer {
 
     private val options = FaceDetectorOptions.Builder()
@@ -32,13 +33,17 @@ class FaceDistanceAnalyzer(
                 .addOnSuccessListener { faces ->
                     if (faces.isNotEmpty()) {
                         val face = faces.first()
-                        val faceHeight = face.boundingBox.height()
-                        // 600 بكسل هو معيار تقريبي للاقتراب الشديد، يمكن تعديله لاحقاً
-                        if (faceHeight > 600) {
+                        // حساب نسبة الوجه من الشاشة ليعمل بدقة على أي هاتف
+                        val faceHeightRatio = face.boundingBox.height().toFloat() / image.height.toFloat()
+                        
+                        if (faceHeightRatio > 0.35f) { // إذا غطى الوجه 35% من الكاميرا
                             onTooCloseTriggered()
                         } else {
                             onSafeDistance()
                         }
+                    } else {
+                        // الكاميرا لا ترى وجهاً (إما أن الهاتف ملتسق بالوجه أو المستخدم لا ينظر)
+                        onFaceLost()
                     }
                 }
                 .addOnCompleteListener {
