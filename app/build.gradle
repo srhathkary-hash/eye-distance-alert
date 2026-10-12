@@ -30,4 +30,5 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
     
     implementation 'com.google.mlkit:face-detection:16.1.6'
+    implementation 'androidx.lifecycle:lifecycle-service:2.6.2'
 }
