@@ -3,7 +3,6 @@ package com.eyedistance.app
 import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 
 class MainActivity : ComponentActivity() {
@@ -19,11 +18,12 @@ class MainActivity : ComponentActivity() {
         val testBtn = Button(this).apply {
             text = "اختبار رسالة الدين (واتساب)"
             textSize = 20f
-            setBackgroundColor(android.graphics.Color.parseColor("#25D366")) // لون واتساب
+            setBackgroundColor(android.graphics.Color.parseColor("#25D366"))
             setTextColor(android.graphics.Color.WHITE)
             
             setOnClickListener {
-                val testPhone = "07700000000" // ضع رقمك الحقيقي هنا للاختبار
+                // ضع رقم هاتفك الشخصي هنا بدل الأصفار لتجربة الإرسال
+                val testPhone = "07700000000" 
                 val testMsg = "مرحباً، تم تفعيل اشتراكك.\n⚠️ يرجى ملاحظة وجود دين متبقي: 15,000 دينار."
                 WhatsAppEngine.sendAlert(this@MainActivity, testPhone, testMsg)
             }
