@@ -1,10 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt' // ضروري لقاعدة البيانات
+    id 'kotlin-kapt'
 }
 android {
-    namespace 'com.eyedistance.app' // سنترك حزمة التطبيق كما هي لتجنب أخطاء التوجيه
+    namespace 'com.eyedistance.app'
     compileSdk 34
     defaultConfig {
         applicationId "com.eyedistance.app"
